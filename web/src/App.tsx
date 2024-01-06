@@ -6,6 +6,8 @@ function App() {
 
   const [file, setFile] = useState<File>();
 
+  const onLoadFile = () => {};
+
   return (
     <div className="h-screen w-screen">
       <div className="w-full h-full flex items-center justify-center bg-zinc-300">
