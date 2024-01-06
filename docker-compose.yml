@@ -1,0 +1,46 @@
+version: '3'
+services:
+  web:
+    image: node:18
+    working_dir: /app/web
+    volumes:
+      - ./web:/app/web
+      - /app/web/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    command: sh -c "yarn install && yarn dev --host"
+    networks:
+      - my_network
+
+  api:
+    image: node:18
+    working_dir: /app/api
+    volumes:
+      - ./api:/app/api
+      - /app/api/node_modules
+    ports:
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+    environment:
+      NODE_ENV: development
+    command: sh -c "yarn install && yarn start"
+    depends_on:
+      - postgres
+    networks:
+      - my_network
+
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
