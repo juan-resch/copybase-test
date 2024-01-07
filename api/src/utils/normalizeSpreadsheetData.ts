@@ -1,9 +1,9 @@
 import { SpreadsheetData } from "@/types";
 
 const mappedIndexToProperties = [
-  "requency",
+  "frequency",
   "chargesCount",
-  "recorrency",
+  "recurrence",
   "startDate",
   "status",
   "statusDate",
@@ -21,9 +21,7 @@ export default function normalizeSpreadsheetData(data: any[][]) {
   for (let column of badData) {
     var rowData: SpreadsheetData = {} as SpreadsheetData;
 
-    column.map(
-      (value, index) => (rowData = { ...rowData, [mappedIndexToProperties[index]]: value })
-    );
+    column.map((cell, index) => (rowData = { ...rowData, [mappedIndexToProperties[index]]: cell }));
 
     goodData.push(rowData);
   }
