@@ -56,7 +56,7 @@ export const Graph: FC<GraphProps> = ({ data }) => {
         responsive: true,
         scales: {
           x: {
-            type: "time",
+            type: "timeseries",
             time: {
               unit: "month",
             },
@@ -74,10 +74,18 @@ export const Graph: FC<GraphProps> = ({ data }) => {
         },
         plugins: {
           tooltip: {
-            backgroundColor: "#111",
+            backgroundColor: "#fff",
+            bodyColor: "#666",
+            bodyFont: { weight: "bolder", size: 18 },
+            padding: 10,
+            borderColor: "#999",
+            borderWidth: 0.5,
             displayColors: false,
             callbacks: {
-              label: (context: any) => {
+              title: () => {
+                return "";
+              },
+              label: (context) => {
                 const dataPoint = graphData[context.dataIndex];
                 return [
                   `${options.labelPrefix || ""} ${toLocale(dataPoint.y)} ${
@@ -103,7 +111,7 @@ export const Graph: FC<GraphProps> = ({ data }) => {
         canvasMRRRef,
         data.map((item) => ({ x: item.date, y: item.mrr })),
         {
-          color: "rgba(75, 192, 192, 1)",
+          color: "#5682fa",
           title: "MRR",
           labelPrefix: "R$",
         }
@@ -115,7 +123,7 @@ export const Graph: FC<GraphProps> = ({ data }) => {
         canvasChurnRateRef,
         data.map((item) => ({ x: item.date, y: item.churnRate })),
         {
-          color: "rgba(255, 99, 132, 1)",
+          color: "#9945ff",
           title: "Churn Rate",
           labelSuffix: "%",
         }

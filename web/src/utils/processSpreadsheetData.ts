@@ -1,10 +1,9 @@
 import { ProcessedChartData, SpreadsheetData } from "../types";
-import convertExcelDateToJSDate from "./convertExcelDateToJSDate";
 
 export function processSpreadsheetDataMonthly(data: SpreadsheetData[]) {
   if (!data) return;
 
-  data.sort((a, b) => a.startDate - b.startDate);
+  data.sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
   const filteredData = data.filter((d) => d.frequency === "Mensal");
   const processedChartData: ProcessedChartData[] = [];
   const mmrPerMonth: { [key: string]: number } = {};
@@ -12,7 +11,7 @@ export function processSpreadsheetDataMonthly(data: SpreadsheetData[]) {
   const cancelClientsPerMonth: { [key: string]: number } = {};
 
   filteredData.forEach((item) => {
-    const monthYear = convertExcelDateToJSDate(item.startDate).toLocaleDateString("pt-BR", {
+    const monthYear = new Date(item.startDate).toLocaleDateString("pt-BR", {
       year: "numeric",
       month: "numeric",
     });
