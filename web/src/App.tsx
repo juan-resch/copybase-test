@@ -120,6 +120,10 @@ function App() {
         closeOnSelect
         onSelectItem={(item) => setChartData(item.data)}
         onClickClose={() => setHistoricMenuIsOpen(false)}
+        onResetHistoric={() => {
+          resetHistoric();
+          setHistoric([]);
+        }}
       />
     </div>
   );
