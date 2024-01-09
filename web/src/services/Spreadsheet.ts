@@ -21,7 +21,6 @@ export default class SpreadsheetService {
     } catch (error: any) {
       const msg = error?.response?.data?.error || "Unknown error";
       const status = error?.response?.status || 0;
-      console.log("mamou");
 
       return {
         error: msg,
