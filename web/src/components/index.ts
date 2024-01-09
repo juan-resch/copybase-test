@@ -1,3 +1,4 @@
 export * from "./Button";
-export * from "./Graph";
+export * from "./Graphs";
 export * from "./HistoricMenu";
+export * from "./Block";

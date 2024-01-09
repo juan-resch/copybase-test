@@ -1,7 +1,9 @@
+import { fds, spreadsheetDataSchema } from "@/dto/SpreadsheetDto";
 import SpreadsheetService from "@/services/SpreadsheetService";
 import { SpreadsheetData } from "@/types";
 import { Request, Response } from "express";
 import path from "path";
+import { ZodError } from "zod";
 
 export default {
   convertToJson: async (req: Request, res: Response) => {
@@ -20,12 +22,20 @@ export default {
       } else if (fileExtension == ".xlsx") {
         data = SpreadsheetService.convertXLSXToJson(filePath);
       } else {
-        return res.status(400).json({ error: "File not supported" });
+        return res.status(415).json({ error: "Arquivo não suportado" });
       }
 
+      const validData = fds.parse(data[0]);
+
       return res.status(200).json(data);
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      const isZodError = error instanceof ZodError;
+
+      if (isZodError) {
+        return res.status(415).json({ error: "Arquivo não suportado" });
+      }
+
+      return res.status(500).json({ error: "Server error" });
     }
   },
 };

@@ -8,7 +8,7 @@ type GraphProps = {
   data: ProcessedChartData[];
 };
 
-export const Graph: FC<GraphProps> = ({ data }) => {
+export const Graphs: FC<GraphProps> = ({ data }) => {
   const canvasMRRRef = useRef<HTMLCanvasElement | null>(null);
   const canvasChurnRateRef = useRef<HTMLCanvasElement | null>(null);
   const chartMRRRef = useRef<Chart | null | undefined>(null);
@@ -152,7 +152,7 @@ export const Graph: FC<GraphProps> = ({ data }) => {
   }, [containerSize]);
 
   return (
-    <div className="p-4 w-full flex flex-col xl:flex-row gap-x-4">
+    <div className="p-4 w-full h-full flex flex-col xl:flex-row gap-x-4">
       <div className="flex flex-1">
         <canvas ref={canvasMRRRef} />
       </div>

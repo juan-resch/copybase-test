@@ -1,8 +1,13 @@
 import { ProcessedChartData, SpreadsheetData } from "../types";
 
 /*
-Fiquei um pouco confuso com a periodicidade das assinaturas e como exatamente calcular MMR de Churn Rate de forma correta.
-Diante algumas dúvidas eu optei por diluiur as assinaturas anuais em mensais (apenas dividindo por 12) antes de calcular o MMR e Churn Rate.
+  Fiquei um pouco confuso com a periodicidade das assinaturas e como exatamente 
+  calcular MMR de Churn Rate de forma correta.
+
+  Diante algumas dúvidas eu optei por diluiur as assinaturas anuais em mensais 
+  (dividindo por 12) antes de calcular o MMR e Churn Rate e não tive sucesso.
+
+  então deixei apenas assinaturas mensais.
 */
 
 export function processSpreadsheetDataMonthly(data: SpreadsheetData[]) {
@@ -11,7 +16,7 @@ export function processSpreadsheetDataMonthly(data: SpreadsheetData[]) {
   data.sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
 
   const monthlySubscriptions = data.filter((d) => d.frequency == "Mensal");
-  const yearlySubscriptions = data.filter((d) => d.frequency == "Anual");
+  // const yearlySubscriptions = data.filter((d) => d.frequency == "Anual");
 
   const processedChartData: ProcessedChartData[] = [];
   const mmrPerMonth: { [key: string]: number } = {};
@@ -49,7 +54,6 @@ export function processSpreadsheetDataMonthly(data: SpreadsheetData[]) {
     const cancelClients = cancelClientsPerMonth[monthYear];
 
     const churnRate = (cancelClients ? cancelClients / subscriptionAmmount : 0) * 100;
-    console.log("churnrate", churnRate);
 
     const [month, year] = monthYear.split("/");
 

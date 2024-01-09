@@ -35,6 +35,9 @@ export default function normalizeCSVSpreadsheetData(uniqueBadData: any) {
     if (key == "startDate" || key == "statusDate") {
       uniqueGoodData[key] = new Date(uniqueGoodData[key]).toLocaleDateString();
     }
+    if (key == "cancelDate") {
+      uniqueGoodData[key] = new Date(uniqueGoodData[key]!!).toLocaleDateString();
+    }
   });
 
   return uniqueGoodData;

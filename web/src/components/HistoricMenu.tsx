@@ -44,29 +44,37 @@ export const HistoricMenu: FC<HistoricMenuProps> = ({
         </button>
       </div>
       <div className="flex-1 flex-col border-t overflow-y-auto border-zinc-400">
-        {historicData?.map((item, index) => (
-          <button
-            onClick={() => {
-              if (closeOnSelect) onClickClose();
-              onSelectItem(item);
-            }}
-            className="flex items-center border-b border-zinc-400 duration-150 hover:bg-zinc-300 justify-center w-full h-20 text-center text-black text-sm font-semibold"
-          >
-            <span>
-              {index + 1} - {item.title}
-            </span>
-          </button>
-        ))}
+        {historicData && historicData.length > 0 ? (
+          historicData.map((item, index) => (
+            <button
+              onClick={() => {
+                if (closeOnSelect) onClickClose();
+                onSelectItem(item);
+              }}
+              className="flex items-center border-b border-zinc-400 duration-150 hover:bg-zinc-300 justify-center w-full h-20 text-center text-black text-sm font-semibold"
+            >
+              <span>
+                {index + 1} - {item.title}
+              </span>
+            </button>
+          ))
+        ) : (
+          <div className="flex flex-col w-full items-center pt-8">
+            <span className="text-xl font-medium italic text-zinc-600">Histórico vazio</span>
+          </div>
+        )}
       </div>
-      <button
-        onClick={handleDeleteHistoric}
-        className="flex w-full duration-150 hover:bg-zinc-300 bottom-0 h-16 rounded-bl-lg items-center justify-center gap-1 border-t border-t-zinc-300"
-      >
-        <span className="text-zinc-600 font-bold text-sm">
-          {confirmReset ? "Clique novamente para confirmar" : "Apagar histórico"}
-        </span>
-        <Trash2 color="#555" size={20} />
-      </button>
+      {historicData && historicData.length > 0 && (
+        <button
+          onClick={handleDeleteHistoric}
+          className="flex w-full duration-150 hover:bg-zinc-300 bottom-0 h-16 rounded-bl-lg items-center justify-center gap-1 border-t border-t-zinc-300"
+        >
+          <span className="text-zinc-600 font-bold text-sm">
+            {confirmReset ? "Clique novamente para confirmar" : "Apagar histórico"}
+          </span>
+          <Trash2 color="#555" size={20} />
+        </button>
+      )}
     </div>
   );
 };

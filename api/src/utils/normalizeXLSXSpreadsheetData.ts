@@ -27,6 +27,8 @@ export default function normalizeXLSXSpreadsheetData(data: any[][]) {
 
       if (key == "startDate" || key == "statusDate") {
         rowData[key] = convertExcelDateToJSDate(cell).toLocaleDateString();
+      } else if (key == "cancelDate") {
+        rowData[key] = convertExcelDateToJSDate(cell).toLocaleDateString();
       } else {
         rowData = { ...rowData, [mappedKeys[index]]: cell };
       }

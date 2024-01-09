@@ -5,7 +5,7 @@ export type SpreadsheetData = {
   startDate: string;
   status: "Ativa" | "Cancelada" | "Trial cancelado" | "Upgrade";
   statusDate: string;
-  cancelDate: number | null;
+  cancelDate: string;
   value: number;
   nextCicle: string;
   assinantId: string;
