@@ -4,6 +4,7 @@ import { SpreadsheetData } from "@/types";
 import { Request, Response } from "express";
 import path from "path";
 import { ZodError } from "zod";
+import fs from "fs";
 
 export default {
   convertToJson: async (req: Request, res: Response) => {
@@ -27,6 +28,7 @@ export default {
 
       const validData = fds.parse(data[0]);
 
+      fs.unlinkSync(filePath);
       return res.status(200).json(data);
     } catch (error: any) {
       const isZodError = error instanceof ZodError;
