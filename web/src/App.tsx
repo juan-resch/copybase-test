@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Block, Button, Graphs, HistoricMenu } from "./components";
 import SpreadsheetService from "./services/Spreadsheet";
-import { HistoricChartData, ProcessedChartData, SpreadsheetData } from "./types";
-import { processSpreadsheetDataMonthly } from "./utils/processSpreadsheetData";
+import { HistoricChartData, ProcessedChartData } from "./types";
 import findMaxChurnRate from "./utils/findMaxChurnRate";
 import findMaxMRR from "./utils/findMaxMMR";
 import findMinChurnRate from "./utils/findMinChurnRate";
@@ -16,7 +15,7 @@ function App() {
   const [file, setFile] = useState<File>();
   const [error, setError] = useState<string>("");
 
-  const [data, setData] = useState<SpreadsheetData[]>();
+  // const [data, setData] = useState<SpreadsheetData[]>();
   const [chartData, setChartData] = useState<ProcessedChartData[]>();
 
   const [historic, setHistoric] = useState<HistoricChartData[]>([]);
@@ -30,7 +29,7 @@ function App() {
   const sendFile = async () => {
     if (!file) return;
 
-    const { data, status, success, error } = await SpreadsheetService.convertSpreadsheetToJSON(
+    const { data, status, success, error } = await SpreadsheetService.convertSpreadsheetToChartData(
       file
     );
 
@@ -41,7 +40,11 @@ function App() {
       return;
     }
 
-    setData(data);
+    saveLocalData({
+      data,
+      title: file.name || new Date().toLocaleDateString(),
+    });
+    setChartData(data);
   };
 
   const resetHistoric = () => localStorage.setItem("historic", JSON.stringify([]));
@@ -78,20 +81,6 @@ function App() {
   }, [file]);
 
   useEffect(() => {
-    if (!data) return;
-
-    const processedData = processSpreadsheetDataMonthly(data);
-
-    if (!processedData) return;
-
-    saveLocalData({
-      data: processedData,
-      title: file?.name || new Date().toDateString(),
-    });
-    setChartData(processedData);
-  }, [data]);
-
-  useEffect(() => {
     const timeoutId = setTimeout(() => {
       setError("");
     }, 5000);
@@ -103,7 +92,7 @@ function App() {
 
   return (
     <div className="h-screen w-screen relative pt-20 bg-zinc-100 overflow-hidden">
-      <div className="fixed top-0 h-20 w-full bg-gradient-to-r from-black via-[#1a0438] to-black px-14 items-center flex justify-between">
+      <div className="fixed top-0 h-20 w-full bg-gradient-to-r from-black via-[#1a0438] to-black 2xl:px-52 md:px-12 lg:px-20 items-center flex justify-between">
         <span className="text-white font-bold text-xl">Copybase Test</span>
 
         {historic && (
@@ -115,37 +104,37 @@ function App() {
           </button>
         )}
       </div>
-      <div className="flex-col gap-4 w-full py-10 px-14 h-full flex items-center justify-center">
+      <div className="flex-col overflow-y-auto gap-4 w-full py-10 2xl:px-52 lg:px-20 md:px-12 h-full flex items-center ">
         {chartData && (
           <div className="flex flex-col w-full bg-zinc-200 rounded-lg border-zinc-300 border shadow-lg ">
             <Graphs data={chartData} />
-            <div className="p-6 flex gap-x-8">
+            <div className="p-6 flex gap-x-2 lg:gap-x-4">
               {maxMMR && (
                 <Block
                   title="Maior MMR"
                   value={`R$ ${toLocale(maxMMR.mrr)}`}
-                  description={maxMMR.date.toLocaleDateString()}
+                  description={new Date(maxMMR.date).toLocaleDateString()}
                 />
               )}
               {minMMR && (
                 <Block
                   title="Menor MMR"
                   value={`R$ ${toLocale(minMMR.mrr)}`}
-                  description={minMMR.date.toLocaleDateString()}
+                  description={new Date(minMMR.date).toLocaleDateString()}
                 />
               )}
               {maxChurnRate && (
                 <Block
                   title="Maior Churn Rate"
                   value={`${toLocale(maxChurnRate.churnRate)}%`}
-                  description={maxChurnRate.date.toLocaleDateString()}
+                  description={new Date(maxChurnRate.date).toLocaleDateString()}
                 />
               )}
               {minChurnRate && (
                 <Block
                   title="Menor Churn Rate"
                   value={`${toLocale(minChurnRate.churnRate)}%`}
-                  description={minChurnRate.date.toLocaleDateString()}
+                  description={new Date(minChurnRate.date).toLocaleDateString()}
                 />
               )}
             </div>
@@ -156,7 +145,7 @@ function App() {
           onClick={() => {
             inputRef.current?.click();
           }}
-          text={data ? "Selecionar outra planilha" : "Selecionar planilha"}
+          text={chartData ? "Selecionar outra planilha" : "Selecionar planilha"}
         />
         <input
           accept=".csv,.xlsx"

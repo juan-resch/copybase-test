@@ -3,13 +3,13 @@ import axios from "axios";
 const api = axios.create({ baseURL: "http://localhost:3333/spreadsheet" });
 
 export default class SpreadsheetService {
-  static async convertSpreadsheetToJSON(spreadsheetFile: File) {
+  static async convertSpreadsheetToChartData(spreadsheetFile: File) {
     try {
       const data = new FormData();
 
       data.append("file", spreadsheetFile);
 
-      const response = await api.post("/convertToJson", data, {
+      const response = await api.post("/convertSpreadsheetToChartData", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

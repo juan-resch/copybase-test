@@ -1,4 +1,4 @@
-import { fds, spreadsheetDataSchema } from "@/dto/SpreadsheetDto";
+import { spreadsheetDataSchema } from "@/dto/SpreadsheetDto";
 import SpreadsheetService from "@/services/SpreadsheetService";
 import { SpreadsheetData } from "@/types";
 import { Request, Response } from "express";
@@ -7,7 +7,7 @@ import { ZodError } from "zod";
 import fs from "fs";
 
 export default {
-  convertToJson: async (req: Request, res: Response) => {
+  convertSpreadsheetToChartData: async (req: Request, res: Response) => {
     try {
       const file = req.file;
 
@@ -26,10 +26,12 @@ export default {
         return res.status(415).json({ error: "Arquivo não suportado" });
       }
 
-      const validData = fds.parse(data[0]);
+      spreadsheetDataSchema.parse(data[0]);
+
+      const spreadsheetChartData = SpreadsheetService.processSpreadsheetChartDataMonthly(data);
 
       fs.unlinkSync(filePath);
-      return res.status(200).json(data);
+      return res.status(200).json(spreadsheetChartData);
     } catch (error: any) {
       const isZodError = error instanceof ZodError;
 

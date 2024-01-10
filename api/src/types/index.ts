@@ -10,3 +10,9 @@ export type SpreadsheetData = {
   nextCicle: string;
   assinantId: string;
 };
+
+export type ProcessedChartData = {
+  date: Date;
+  mrr: number;
+  churnRate: number;
+};

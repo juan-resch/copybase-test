@@ -3,7 +3,7 @@ import XLSX from "xlsx";
 
 import csv from "csv-parser";
 import fs from "fs";
-import { SpreadsheetData } from "@/types";
+import { ProcessedChartData, SpreadsheetData } from "@/types";
 import stream from "stream";
 import normalizeCSVSpreadsheetData from "@/utils/normalizeCSVSpreadsheetData";
 
@@ -49,5 +49,59 @@ export default class SpreadsheetService {
     } catch (error) {
       throw error;
     }
+  }
+  static processSpreadsheetChartDataMonthly(data: SpreadsheetData[]) {
+    data.sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
+
+    const monthlySubscriptions = data.filter((d) => d.frequency == "Mensal");
+    // const yearlySubscriptions = data.filter((d) => d.frequency == "Anual");
+
+    const processedChartData: ProcessedChartData[] = [];
+    const mmrPerMonth: { [key: string]: number } = {};
+    const activeClientsPerMonth: { [key: string]: number } = {};
+    const cancelClientsPerMonth: { [key: string]: number } = {};
+
+    monthlySubscriptions.forEach((item) => {
+      const monthYear = new Date(item.startDate).toLocaleDateString("pt-BR", {
+        year: "numeric",
+        month: "numeric",
+      });
+
+      if (!mmrPerMonth[monthYear]) {
+        mmrPerMonth[monthYear] = 0;
+        activeClientsPerMonth[monthYear] = 0;
+        cancelClientsPerMonth[monthYear] = 0;
+      }
+
+      activeClientsPerMonth[monthYear]++;
+
+      if (item.status === "Cancelada" || item.status == "Trial cancelado") {
+        cancelClientsPerMonth[monthYear]++;
+      } else {
+        mmrPerMonth[monthYear] += item.value;
+      }
+    });
+
+    let subscriptionAmmount = 0;
+
+    Object.entries(mmrPerMonth).forEach(([monthYear, mrr]) => {
+      const activeClients = activeClientsPerMonth[monthYear];
+
+      subscriptionAmmount += activeClients;
+
+      const cancelClients = cancelClientsPerMonth[monthYear];
+
+      const churnRate = (cancelClients ? cancelClients / subscriptionAmmount : 0) * 100;
+
+      const [month, year] = monthYear.split("/");
+
+      processedChartData.push({
+        date: new Date(`${year}-${month}`),
+        mrr: mrr,
+        churnRate,
+      });
+    });
+
+    return processedChartData;
   }
 }

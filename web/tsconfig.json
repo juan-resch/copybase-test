@@ -20,6 +20,14 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "../api/src/utils/convertExcelDateToJSDate.ts"],
+  "include": [
+    "src",
+    "../api/src/utils/convertExcelDateToJSDate.ts",
+    "src/utils/findMaxChurnRate.ts",
+    "src/utils/findMaxMMR.ts",
+    "src/utils/findMinChurnRate.ts",
+    "src/utils/findMinMMR.ts",
+    "../api/src/utils/processSpreadsheetData.ts"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

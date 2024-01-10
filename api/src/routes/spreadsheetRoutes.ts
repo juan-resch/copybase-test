@@ -5,9 +5,9 @@ import spreedsheetController from "@/controllers/spreedsheetController";
 const spreadsheetRoutes = Router();
 
 spreadsheetRoutes.post(
-  "/convertToJson/",
+  "/convertSpreadsheetToChartData/",
   upload.single("file"),
-  spreedsheetController.convertToJson
+  spreedsheetController.convertSpreadsheetToChartData
 );
 
 export default spreadsheetRoutes;
