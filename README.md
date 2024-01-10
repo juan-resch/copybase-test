@@ -1,5 +1,7 @@
 Use `docker compose up` para rodar.
 
+Acesse: `http://localhost:3000/`
+
 Caso tenha problemas com portas:
 
 `.env`
