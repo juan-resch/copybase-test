@@ -23,6 +23,7 @@ export default {
       } else if (fileExtension == ".xlsx") {
         data = SpreadsheetService.convertXLSXToJson(filePath);
       } else {
+        fs.unlinkSync(filePath);
         return res.status(415).json({ error: "Arquivo não suportado" });
       }
 
