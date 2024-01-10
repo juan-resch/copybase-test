@@ -47,6 +47,7 @@ export const HistoricMenu: FC<HistoricMenuProps> = ({
         {historicData && historicData.length > 0 ? (
           historicData.map((item, index) => (
             <button
+              key={index}
               onClick={() => {
                 if (closeOnSelect) onClickClose();
                 onSelectItem(item);
