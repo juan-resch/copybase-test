@@ -1,1 +1,1 @@
-User `docker compose up` para rodar.
+Use `docker compose up` para rodar.
